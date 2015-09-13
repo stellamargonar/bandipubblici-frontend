@@ -1,0 +1,8 @@
+div
+    .post-preview(ng-repeat-start="call in calls")
+        a(href="{{call.url}}")
+            h4.post-title {{call.title}}
+        p.post-meta 
+            a(ui-sref="institution({ institution: call.institution})")
+                {{call.institution}}
+    hr(ng-repeat-end)

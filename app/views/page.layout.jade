@@ -1,0 +1,18 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport', content='width=device-width, initiaò-scale=1, minimal-ui')
+    title= title
+    block css
+      link(rel='stylesheet', href='/css/app.css')
+      link( href="//fonts.googleapis.com/css?family=Grand+Hotel|Roboto+Slab:400,300" rel="stylesheet")
+    block js
+      if ENV_DEVELOPMENT
+        script(src='http://localhost:35729/livereload.js')
+  body.good-font
+    nav.fixed-title(role="navigation")
+        a.logo(href="http://127.0.0.1", role="banner") Bandi Pubblici
+        input.good-font.plugin-search(ng-change="limit=15", type="search", role="search", autofocus, placeholder="Cerca bando ...")
+    section.plugin-list-container(role="main")
+        block page-content

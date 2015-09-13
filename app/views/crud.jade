@@ -1,0 +1,54 @@
+doctype html
+html(lang='en', ng-app="callsApp")
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport', content='width=device-width')
+    title= title
+  
+    block css
+        link(href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css", rel="stylesheet" integrity="sha256-MfvZlkHCEqatNoGiOXveE8FIwMzZg4W85qfrfIFBfYc= sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous")
+    
+        link( href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css")
+        link( href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css')
+        link( href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css')
+  
+    block js
+      script(src='/components/angular/angular.min.js')
+      script(src='/components/angular-resource/angular-resource.min.js')
+      script(src='/components/angular-ui-router/release/angular-ui-router.min.js')
+      script(src='/js/app.angular.js')
+      if ENV_DEVELOPMENT
+        script(src='http://localhost:35729/livereload.js')
+
+  body(ng-controller="MainController")
+
+    h2 Bandi registrati
+    .container
+        .row
+            .col-lg-8
+                table.table.table-condensed.table-striped
+                    tr
+                        th Titolo
+                        th Istituzione
+                        th Città
+                        th Expiration
+                        th &nbsp;
+                    tr(ng-repeat="call in calls")
+                        td.truncate
+                            a(href="{{call.url}}") {{call.title}}
+                        td {{call.institution}}
+                        td {{call.city}}
+                        td {{call.expiration}}
+                        td 
+                            a.btn.btn-danger.btn-xs(ng-click="deleteCall(call)") Remove
+                            a.btn.btn-warning.btn-xs(ng-click="editCall(call)") Edit
+            .col-lg-4
+                div(data-spy="affix" data-offset-top="60" data-offset-bottom="200")
+                    form(ng-submit="saveCall()")
+                        input.form-control(type="text" ng-model="call.url", placeholder="Url")
+                        input.form-control(type="text" ng-model="call.title", placeholder="Title")
+                        input.form-control(type="text" ng-model="call.institution", placeholder="institution")
+                        input.form-control(type="text" ng-model="call.city", placeholder="City")
+                        input.form-control(type="text" ng-model="call.type", placeholder="type")
+                        input.form-control(type="date" ng-model="call.expiration")
+                        input.btn.btn-info.btn-block(type="submit")    
