@@ -23,3 +23,8 @@ router.get '/bandi', (req, res, next) ->
       title: 'Bandi pubblici'
       tagline : 'Tutti i bandi pubblici italiani in un solo sito, gratis'
       calls : calls
+
+router.get '/sources', (req, res, next) ->
+    res.render 'sources',
+        title: 'Bandi pubblici'
+        tagline : 'Tutti i bandi pubblici italiani in un solo sito, gratis'

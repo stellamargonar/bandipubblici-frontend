@@ -82,3 +82,46 @@ crawlApp.factory('Call', function ($resource) {
         }
     );
 });
+
+crawlApp.factory('Source', ['$http', function($http){
+    var instance = {};
+    var host = 'http://127.0.0.1:5000/';
+
+    instance.save = function(payload){
+        console.log('Posting to ' + host + 'sources');
+        console.log(payload);
+        return $http.post(host + 'sources', payload);
+    };
+    instance.delete = function(id) {
+        return $http.delete(host + 'sources', id);
+    };
+    instance.search = function(param, query) {
+        return $http.get(host + 'sources?' + param + '=' + query);    
+    };
+    instance.index = function() {
+        return $http.get(host + 'sources');    
+    };
+    return instance;
+}]);
+
+crawlApp.controller('SourceController', ['$scope', 'Source', '$http', function($scope, Source, $http){
+    $scope.source = {name: '', baseUrl : ''};
+    
+    $scope.sources = [];
+    var readSources = function() {
+        Source.index().success(function(data) {$scope.sources = data; });   
+    };    
+    $scope.saveSource = function() {
+        Source.save($scope.source).success(function() {
+            readSources();
+        });
+    };
+    $scope.editCall = function(source){
+        $scope.source = source;
+    };
+
+    $scope.deleteCall = Source.delete($scope.source._id);
+    readSources();
+    // $scope.search = Source.search('name', $scope.queryObject);
+
+}]);
