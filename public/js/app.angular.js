@@ -101,6 +101,9 @@ crawlApp.factory('Source', ['$http', function($http){
     instance.index = function() {
         return $http.get(host + 'sources');    
     };
+    instance.test = function(payload) {
+        return $http.post(host + 'sources/test', payload);
+    };
     return instance;
 }]);
 
@@ -113,15 +116,41 @@ crawlApp.controller('SourceController', ['$scope', 'Source', '$http', function($
     };    
     $scope.saveSource = function() {
         Source.save($scope.source).success(function() {
+            $scope.source = {};
             readSources();
         });
     };
-    $scope.editCall = function(source){
+    $scope.editSource = function(source){
         $scope.source = source;
     };
+    $scope.testSource  = function(source) {
+        $scope.testCalls = undefined;
+        $scope.error = undefined;
+
+        if (!source.baseUrl)
+            return
+        var promise = Source.test($scope.source);
+        promise.success(function(data) {
+            $scope.testCalls = data;
+        });
+        promise.error(function(error) {
+            $scope.error = error;
+        });
+    }
+ 
 
     $scope.deleteCall = Source.delete($scope.source._id);
     readSources();
     // $scope.search = Source.search('name', $scope.queryObject);
 
-}]);
+    $scope.pattern  = {title: '', pattern : ''};
+    $scope.addPattern = function() {
+        $scope.source.pattern = $scope.source.pattern || {};
+        $scope.source.pattern[$scope.pattern.title] = $scope.pattern.pattern;
+        $scope.pattern  = {title: '', pattern : ''};
+    }
+    $scope.removePattern = function(key) {
+        if ($scope.source.pattern[key])
+            delete $scope.source.pattern[key]
+    }
+ }]);

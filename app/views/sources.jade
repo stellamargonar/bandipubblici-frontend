@@ -29,15 +29,64 @@ html(lang='en', ng-app="callsApp")
     .col-md-4
         div(data-spy="affix" data-offset-top="60" data-offset-bottom="200")
             form(ng-submit="saveSource()")
-                input.form-control(type="text" ng-model="source.baseUrl", placeholder="Url")
-                input.form-control(type="text" ng-model="source.name", placeholder="Title")
-                input.btn.btn-info.btn-block(type="submit")    
+              .form-group
+                label(for="baseUrl") Url
+                input.form-control(type="text" ng-model="source.baseUrl", placeholder="Url", id="baseUrl")
+              .form-group
+                label(for="name") Name
+                input.form-control(type="text" ng-model="source.name", placeholder="Name", id="name")
+
+              fieldset
+                label(for="regex") Url Regex
+                .form-inline.form-group#regex
+                  input.form-control(type="text" ng-model="source.fetchRegex", placeholder="Regex urls to be fetched", id="fetchRegex")
+                  input.form-control(type="text" ng-model="source.saveRegex", placeholder="Regex urls to be saved", id="saveRegex")
+                  
+              fieldset
+                label(for="patterns") Patterns
+                .form-inline#patterns
+                  input.form-control(type="text", ng-model="pattern.title")
+                  input.form-control(type="text", ng-model="pattern.pattern")
+                  a.btn-xs.btn-default(ng-click="addPattern()")
+                    i.fa.fa-plus
+
+              fieldset
+                ul(ng-show="source.pattern")
+                  li.list(ng-repeat="(key,value) in source.pattern") {{key}} : {{value}}
+                    span.pull-right
+                      a.btn-xs(ng-click="removePattern(key)")
+                        i.fa.fa-minus
+              p 
+              input.btn.btn-info.btn-block(type="submit")    
+
+            button.btn.btn-warning(ng-click="testSource()") Test Source
+            .row
+              alert(ng-show="error")
+              .col-md-12(ng-show="testCalls")
+                p Found {{testCalls.length}} calls
+                ul
+                  li(ng-repeat="call in testCalls") 
+                    b {{call.title}}
+
+
 
    .col-md-8
         .post-preview(ng-repeat-start="source in sources")
-            a(href="{{source.url}}")
-                h4.post-title {{source.name}}
-            //- p.post-meta 
-            //-     a(ui-sref="byinstitution({ institution: call.institution})")
-            //-         {{call.institution}}
+          .pull-right
+            button.btn-xs(ng-click="editSource(source)")
+              i.fa.fa-edit
+            button.btn-xs(ng-click="deleteSource(source)")
+              i.fa.fa-times
+          a(href="{{source.url}}")
+              h4.post-title {{source.name}}
+          p.post-meta 
+              {{source.baseUrl}} 
+          ul(ng-show="source.pattern")
+            li(ng-repeat="(field, pattern) in source.pattern")
+              {{field}}  :  {{pattern}}
+
+          p.post-meta
+            | Fetch : {{source.fetchRegex}}
+            | Save : {{source.saveRegex}}
+
         hr(ng-repeat-end)
