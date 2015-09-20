@@ -1,0 +1,15 @@
+header.header-image {
+	background-image:url('/img/italianflag.jpg');
+	color : white;
+}
+
+.headline h1 {
+	background-color: transparent !important;
+}
+
+.badge-success {
+	background-color: #5cb85c;
+}
+.badge-danger {
+	background-color: #d9534f;
+}
