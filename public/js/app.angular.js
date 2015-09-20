@@ -93,7 +93,7 @@ crawlApp.factory('Source', ['$http', function($http){
         return $http.post(host + 'sources', payload);
     };
     instance.delete = function(id) {
-        return $http.delete(host + 'sources', id);
+        return $http.delete(host + 'sources/' +  id);
     };
     instance.search = function(param, query) {
         return $http.get(host + 'sources?' + param + '=' + query);    
@@ -103,6 +103,12 @@ crawlApp.factory('Source', ['$http', function($http){
     };
     instance.test = function(payload) {
         return $http.post(host + 'sources/test', payload);
+    };
+    instance.crawl = function(id) {
+        if (id) 
+            return $http.post(host + 'sources/crawl/' + id);
+        else
+            return $http.post(host + 'sources/crawl');
     };
     return instance;
 }]);
@@ -127,7 +133,7 @@ crawlApp.controller('SourceController', ['$scope', 'Source', '$http', function($
         $scope.testCalls = undefined;
         $scope.error = undefined;
 
-        if (!source.baseUrl)
+        if (!$scope.source.baseUrl)
             return
         var promise = Source.test($scope.source);
         promise.success(function(data) {
@@ -136,13 +142,25 @@ crawlApp.controller('SourceController', ['$scope', 'Source', '$http', function($
         promise.error(function(error) {
             $scope.error = error;
         });
+    };
+
+    $scope.deleteSource = function(source) {
+        Source.delete(source._id).success(function() {
+            readSources();
+        });
+    };
+
+    $scope.crawlSource = function(source) {
+        Source.crawl(source._id).success(function(data) {
+            $scope.output = data;
+        })
     }
+
  
 
     $scope.deleteCall = Source.delete($scope.source._id);
     readSources();
     // $scope.search = Source.search('name', $scope.queryObject);
-
     $scope.pattern  = {title: '', pattern : ''};
     $scope.addPattern = function() {
         $scope.source.pattern = $scope.source.pattern || {};
