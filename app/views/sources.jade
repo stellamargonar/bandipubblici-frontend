@@ -11,7 +11,8 @@ html(lang='en', ng-app="callsApp")
         link( href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css")
         link( href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css')
         link( href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css')
-        link(href="/css/app.css", rel="stylesheet")
+        link(href="/css/app-onepagewonder.css" rel="stylesheet")
+        link(href="/css/app-onepagewonder-custom.css" rel="stylesheet")
 
     block js
       script(src='/components/angular/angular.min.js')
@@ -23,70 +24,102 @@ html(lang='en', ng-app="callsApp")
 
   body(ng-controller="SourceController")
     include header
+    //- HEADER --
+
 
     include navbar
 
-    .col-md-4
-        div(data-spy="affix" data-offset-top="60" data-offset-bottom="200")
-            form(ng-submit="saveSource()")
-              .form-group
-                label(for="baseUrl") Url
-                input.form-control(type="text" ng-model="source.baseUrl", placeholder="Url", id="baseUrl")
-              .form-group
-                label(for="name") Name
-                input.form-control(type="text" ng-model="source.name", placeholder="Name", id="name")
+    .container
+      .featurette-divider
+      //- .featurette
+      .row
+        .col-md-6
+          h3 Registered Sources
+          .clearfix
 
-              fieldset
-                label(for="regex") Url Regex
-                .form-inline.form-group#regex
+          div(ng-repeat="source in sources")
+            .pull-right
+              button.btn-xs.btn.btn-success(ng-click="crawlSource(source)")
+                i.fa.fa-play
+              | &nbsp;
+              button.btn-xs.btn.btn-info(ng-click="editSource(source)")
+                i.fa.fa-edit
+              | &nbsp;
+              button.btn-xs.btn.btn-danger(ng-click="deleteSource(source)")
+                i.fa.fa-times
+
+            a(href="{{source.baseUrl}}")
+                h4.post-title {{source.name}}
+                  br
+                  small {{source.baseUrl}} 
+            dl
+              dt Fetch
+              dd 
+                samp.small {{source.fetchRegex}}
+
+              dt Save
+              dd 
+                samp.small{{source.saveRegex}}
+            dl.dl-horizontal
+              dt(ng-repeat-start="(field, pattern) in source.pattern")  {{field}}
+              dd(ng-repeat-end) {{pattern}} 
+
+            hr.featurette-divider
+
+        .col-md-6
+          .panel.panel-default
+            .panel-heading
+              h4 {{ (source._id) ? 'Edit ' : 'Create ' }}  Source
+            .panel-body
+              //- div(data-spy="affix" data-offset-top="60" data-offset-bottom="200")
+              form(ng-submit="saveSource()")
+                .form-group
+                  label(for="baseUrl") Url
+                  input.form-control(type="text" ng-model="source.baseUrl", placeholder="Url", id="baseUrl")
+                .form-group
+                  label(for="name") Name
+                  input.form-control(type="text" ng-model="source.name", placeholder="Name", id="name")
+
+                fieldset
+                  label(for="regex") Url Regex
                   input.form-control(type="text" ng-model="source.fetchRegex", placeholder="Regex urls to be fetched", id="fetchRegex")
+                  | &nbsp;
                   input.form-control(type="text" ng-model="source.saveRegex", placeholder="Regex urls to be saved", id="saveRegex")
-                  
-              fieldset
-                label(for="patterns") Patterns
-                .form-inline#patterns
-                  input.form-control(type="text", ng-model="pattern.title")
-                  input.form-control(type="text", ng-model="pattern.pattern")
-                  a.btn-xs.btn-default(ng-click="addPattern()")
-                    i.fa.fa-plus
+                | &nbsp;
 
-              fieldset
-                ul(ng-show="source.pattern")
-                  li.list(ng-repeat="(key,value) in source.pattern") {{key}} : {{value}}
-                    span.pull-right
-                      a.btn-xs(ng-click="removePattern(key)")
+                fieldset
+                  label(for="patterns") Patterns
+                  .form-inline#patterns
+                    input.form-control(type="text", ng-model="pattern.title", style="width:40%;")
+                    | &nbsp;
+                    input.form-control(type="text", ng-model="pattern.pattern", style="width:40%;")
+                    | &nbsp;
+                    a.badge.badge-success(ng-click="addPattern()")
+                      i.fa.fa-plus
+
+                  dl.dl-horizontal
+                  dl.dl-horizontal
+                    dt(ng-repeat-start="(field, pattern) in source.pattern") 
+                      a.badge.badge-danger.pull-left(ng-click="removePattern(field)")
                         i.fa.fa-minus
-              p 
-              input.btn.btn-info.btn-block(type="submit")    
+                      | {{field}}
+                    dd(ng-repeat-end) {{pattern}}
 
-            button.btn.btn-warning(ng-click="testSource()") Test Source
-            .row
-              alert(ng-show="error")
-              .col-md-12(ng-show="testCalls")
-                p Found {{testCalls.length}} calls
-                ul
-                  li(ng-repeat="call in testCalls") 
-                    b {{call.title}}
+                div
+                  input.btn.btn-info.btn-lg(type="submit")    
+                  | &nbsp;
+                  button.btn.btn-warning.btn-lg(ng-click="testSource()") Test Source
+                
+                .row
+                  alert(ng-show="error")
+                  .col-md-12(ng-show="testCalls")
+                    p Found {{testCalls.length}} calls
+                    .panel.panel-default(ng-repeat="call in testCalls")
+                      .pane-heading {{call.title}}
+                      .panel-body
+                        p [description] {{call.description}}
+                        p [expire_date] {{call.expire_date}}
+                        p [link] {{call.link}}
 
 
-
-   .col-md-8
-        .post-preview(ng-repeat-start="source in sources")
-          .pull-right
-            button.btn-xs(ng-click="editSource(source)")
-              i.fa.fa-edit
-            button.btn-xs(ng-click="deleteSource(source)")
-              i.fa.fa-times
-          a(href="{{source.url}}")
-              h4.post-title {{source.name}}
-          p.post-meta 
-              {{source.baseUrl}} 
-          ul(ng-show="source.pattern")
-            li(ng-repeat="(field, pattern) in source.pattern")
-              {{field}}  :  {{pattern}}
-
-          p.post-meta
-            | Fetch : {{source.fetchRegex}}
-            | Save : {{source.saveRegex}}
-
-        hr(ng-repeat-end)
+     

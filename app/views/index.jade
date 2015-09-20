@@ -11,7 +11,9 @@ html(lang='en', ng-app="callsApp")
         link( href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css")
         link( href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css')
         link( href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css')
-        link(href="/css/app.css", rel="stylesheet")
+        //- link(href="/css/app.css", rel="stylesheet")
+        link(href="/css/app-onepagewonder.css" rel="stylesheet")
+        link(href="/css/app-onepagewonder-custom.css" rel="stylesheet")
 
     block js
       script(src='/components/angular/angular.min.js')
@@ -28,6 +30,7 @@ html(lang='en', ng-app="callsApp")
     include header 
 
     .container
+        .featurette-divider
         .row
             .col-lg-8.col-lg-offset-2.col-md-10.col-md-offset-1
                 form.form-inline
@@ -37,6 +40,8 @@ html(lang='en', ng-app="callsApp")
                     select.form-control(ng-model="queryObject.city")
                         option(value="") Seleziona Città
                         option(ng-repeat="city in cities" value="{{city}}") {{city}}
+                
+                .featurette-divider
                     
                 div
                     .post-preview(ng-repeat-start="call in calls")
