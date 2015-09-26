@@ -13,11 +13,6 @@ crawlApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider
     $stateProvider
         
         .state({
-            name : 'calls',
-            url  : 'calls'
-        })
-
-        .state({
             name         : 'main',
             url          : '/',
             controller   : 'MainController'
@@ -51,7 +46,6 @@ crawlApp.controller('MainController', ['$scope', 'Call', '$http', function($scop
         });
     };
 
-    
     $scope.search = function(){
         console.log($scope.queryObject);
         $scope.calls = Call.query($scope.queryObject);
@@ -59,12 +53,39 @@ crawlApp.controller('MainController', ['$scope', 'Call', '$http', function($scop
 
     $scope.$watch('queryObject', $scope.search, true);
 
+    $http.get('/api/institutions').success(function(data){
+        $scope.institutions = data;
+    });
+    $http.get('/api/cities').success(function(data){
+        $scope.cities = data;
+    });
+    $http.get('/api/types').success(function(data){
+        $scope.types = data;
+    });
+}]);
+
+
+crawlApp.controller('InstitutionController', ['$scope', 'Call', '$http', 'Institution', function($scope, Call, $http, Institution){
+    $scope.queryObject = {
+        institution: Institution
+    };
+
+    $scope.calls = Call.query($scope.queryObject);
+    
+    $scope.search = function(){
+        $scope.calls = Call.query($scope.queryObject);
+    };
+
+    $scope.$watch('queryObject', $scope.search, true);
 
     $http.get('/api/institutions').success(function(data){
         $scope.institutions = data;
     });
     $http.get('/api/cities').success(function(data){
         $scope.cities = data;
+    });
+    $http.get('/api/types').success(function(data){
+        $scope.types = data;
     });
 }]);
 

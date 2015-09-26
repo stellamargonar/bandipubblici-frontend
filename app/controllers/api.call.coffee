@@ -16,8 +16,9 @@ module.exports = (app) ->
 
 router.get '/call', (req, res, next) ->
   query = deleteEmpty req.query
+  #query.expirationDate = {$gt: new Date()}
   console.log(query);
-  Call.find query, (err, calls) ->
+  Call.find(query).sort('expiration').limit(15).exec (err, calls) ->
     return next(err) if err
     res.json(calls) 
 
@@ -53,3 +54,8 @@ router.get '/cities', (req, res, next) ->
   Call.find().distinct 'city', (err, institutions) ->
     return next(err) if err
     res.status(200).json(institutions)
+
+router.get '/types', (req, res, next) ->
+  Call.find().distinct 'type', (err, types) ->
+    return next(err) if err
+    res.status(200).json(types)

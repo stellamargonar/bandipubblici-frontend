@@ -40,7 +40,10 @@ html(lang='en', ng-app="callsApp")
                     select.form-control(ng-model="queryObject.city")
                         option(value="") Seleziona Città
                         option(ng-repeat="city in cities" value="{{city}}") {{city}}
-                
+                    select.form-control(ng-model="queryObject.type")
+                        option(value="") Seleziona Tipologia
+                        option(ng-repeat="type in types" value="{{type}}") {{type}}
+                    
                 .featurette-divider
                     
                 div
@@ -50,6 +53,7 @@ html(lang='en', ng-app="callsApp")
                         p.post-meta 
                             a(ui-sref="byinstitution({ institution: call.institution})")
                                 {{call.institution}}
+                            span.pull-right(ng-show="call.expiration") Scade il {{call.expiration | date : 'dd MMM yyyy'}}
                     hr(ng-repeat-end)
 
     include footer
