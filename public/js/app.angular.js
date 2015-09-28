@@ -2,6 +2,23 @@
 
 var crawlApp = angular.module('callsApp', ['ngResource', 'ui.router']);
 
+crawlApp.directive('callType', function() {
+    return {
+        restrict : 'E',
+        scope : { type : '='},
+        controller : ['$scope', function ($scope) {
+            $scope.labelClass = 'label-default';
+            if ($scope.type == 'ricerca')
+                $scope.labelClass = 'label-success';
+            if ($scope.type == 'sanità')
+                $scope.labelClass = 'label-primary';
+            if ($scope.type == 'premio')
+                $scope.labelClass = 'label-warning';
+        }],
+        template : '<span class="label {{labelClass}}">{{type}}</span>',
+
+    }
+});
 
 crawlApp.controller('SearchController', ['Call', '$scope', '$stateParams', function(Call, $scope, $stateParams){
     $scope.city = $stateParams.city;

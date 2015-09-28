@@ -48,6 +48,8 @@ html(lang='en', ng-app="callsApp")
                     
                 div
                     .post-preview(ng-repeat-start="call in calls")
+                        .pull-right
+                            call-type(type="call.type")
                         a(href="{{call.url}}")
                             h4.post-title {{call.title}}
                         p.post-meta 
