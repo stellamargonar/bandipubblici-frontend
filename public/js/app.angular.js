@@ -194,11 +194,7 @@ crawlApp.controller('SourceController', ['$scope', 'Source', '$http', function($
         })
     }
 
- 
-
-    $scope.deleteCall = Source.delete($scope.source._id);
     readSources();
-    // $scope.search = Source.search('name', $scope.queryObject);
     $scope.pattern  = {title: '', pattern : ''};
     $scope.addPattern = function() {
         $scope.source.pattern = $scope.source.pattern || {};
