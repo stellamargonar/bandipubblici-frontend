@@ -52,6 +52,8 @@ html(lang='en', ng-app="callsApp")
                             call-type(type="call.type")
                         a(href="{{call.url}}")
                             h4.post-title {{call.title}}
+                        .small(ng-show="call.provenance") Fonte 
+                            a(href="call.provenance" style="color: rgb(51, 51, 51);") {{call.provenance}}
                         p.post-meta 
                             a(ui-sref="byinstitution({ institution: call.institution})")
                                 {{call.institution}}
