@@ -1,0 +1,53 @@
+doctype html
+html(lang='en', ng-app="callsApp")
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport', content='width=device-width')
+    title= title
+  
+    block css
+        link(href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css", rel="stylesheet" integrity="sha256-MfvZlkHCEqatNoGiOXveE8FIwMzZg4W85qfrfIFBfYc= sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous")
+    
+        link( href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css")
+        link( href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css')
+        link( href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css')
+        //- link(href="/css/app.css", rel="stylesheet")
+        link(href="/css/app-onepagewonder.css" rel="stylesheet")
+        link(href="/css/app-onepagewonder-custom.css" rel="stylesheet")
+
+    block js
+      script(src='/components/angular/angular.min.js')
+      script(src='/components/angular-resource/angular-resource.min.js')
+      script(src='/components/angular-ui-router/release/angular-ui-router.min.js')
+      script(src='/js/app.angular.js')
+      if ENV_DEVELOPMENT
+        script(src='http://localhost:35729/livereload.js')
+
+  body(ng-controller="DataCleanController")
+
+    include navbar
+
+    include header 
+
+    .container
+        .featurette-divider
+        h2 Institutions to Clean
+        | &nbsp;
+        .row.col-md-12.post-preview(ng-repeat="institution in unvalidated")
+            .col-md-5
+                span {{institution.name}}
+                .pull-right
+                    button.btn.btn-info.btn-xs(ng-click="retrieveSimilarName(institution.name)")
+                        i.fa.fa-search
+            
+            .col-md-5
+                input.form-control(type="text", ng-model="institution.valid_name")
+                select.form-control(ng-show="candidates[institution.name]", ng-model="institution.valid_name", ng-options="candidate for candidate in candidates[institution.name]")
+                br
+            .col-md-1
+                button.btn.btn-xs.btn-success(ng-click="updateSingle(institution.name, institution.valid_name)")
+                    i.fa.fa-check
+            hr
+            hr
+
+    include footer

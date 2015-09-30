@@ -126,8 +126,6 @@ crawlApp.factory('Source', ['$http', function($http){
     var host = 'http://127.0.0.1:5000/';
 
     instance.save = function(payload){
-        console.log('Posting to ' + host + 'sources');
-        console.log(payload);
         return $http.post(host + 'sources', payload);
     };
     instance.delete = function(id) {
@@ -206,3 +204,42 @@ crawlApp.controller('SourceController', ['$scope', 'Source', '$http', function($
             delete $scope.source.pattern[key]
     }
  }]);
+crawlApp.controller('DataCleanController', ['$scope', 'Source', '$http', function($scope, Source, $http){
+    var host = 'http://127.0.0.1:5000/';
+
+    $scope.unvalidated = [];
+    $scope.candidates = {};
+
+    var retrieveUnvalidatedInstitutions = function () {
+        $scope.unvalidated = [];
+        var promise = $http.get(host + 'clean/unvalidated');    
+        promise.success(function(data) {
+            $scope.unvalidated = data;
+        });
+    };
+
+    $scope.updateSingle = function (name, valid_name) {
+        console.log('Updating');
+        var payload = {
+            name : name,
+            valid_name : valid_name 
+        };
+        console.log(payload);
+        var promise = $http.post(host + 'clean/update', payload);
+        promise.success(function() {
+            console.log('Return success');
+            retrieveUnvalidatedInstitutions();
+        });
+    };
+
+    $scope.retrieveSimilarName = function(name, index) {
+        var promise = $http.get(host + 'clean/find?name=' + name);
+        promise.success(function(data) {
+            $scope.candidates[name] = data;
+        });
+    };
+
+
+    retrieveUnvalidatedInstitutions();
+
+}]);

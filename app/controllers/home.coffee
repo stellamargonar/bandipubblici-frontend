@@ -28,3 +28,8 @@ router.get '/sources', (req, res, next) ->
     res.render 'sources',
         title: 'Bandi pubblici'
         tagline : 'Tutti i bandi pubblici italiani in un solo sito, gratis'
+        
+router.get '/dataClean', (req, res, next) ->
+    res.render 'dataClean',
+        title: 'Bandi pubblici'
+        tagline : 'Tutti i bandi pubblici italiani in un solo sito, gratis'
