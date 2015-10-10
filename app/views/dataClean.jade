@@ -31,6 +31,50 @@ html(lang='en', ng-app="callsApp")
 
     .container
         .featurette-divider
+        h2 Merge Calls
+        | &nbsp;
+        .row
+            .col-lg-8.col-lg-offset-2.col-md-10.col-md-offset-1
+                form.form-inline
+                    select.form-control(ng-model="queryObject.institution")
+                        option(value="") Seleziona Organizzazione
+                        option(ng-repeat="institution in institutions" value="{{institution}}") {{institution}}
+                    select.form-control(ng-model="queryObject.city")
+                        option(value="") Seleziona Città
+                        option(ng-repeat="city in cities" value="{{city}}") {{city}}
+                    select.form-control(ng-model="queryObject.type")
+                        option(value="") Seleziona Tipologia
+                        option(ng-repeat="type in types" value="{{type}}") {{type}}
+                    button.btn.btn-info(type="submit", ng-click="merge()") Merge
+                    | &nbsp;
+                    input(type="checkbox", ng-change="selectAll()", ng-model="selectAllBox")
+                    | &nbsp; Check All
+                .featurette-divider
+                    
+                div
+                    .post-preview(ng-repeat-start="call in calls")
+                        button.btn.btn-xs.btn-danger(ng-click="deleteCall(call)")
+                            i.fa.fa-times
+                        {{call._id}}
+                        .pull-right
+                            call-type(type="call.type")
+                        h4.post-title 
+                            input(type="checkbox", ng-model="selectMerge[call._id]")
+                            | &nbsp;
+                            a(href="{{call.url}}") {{call.title}}
+                        //- {{call.alternativ?eTitle}}
+                        .small(ng-show="call.provenance") Fonte 
+                            a(ng-href="call.provenance" style="color: rgb(51, 51, 51);") {{call.provenance}}
+                            //- a(ng-repeat="prov in call.provenances", ng-href="prov", style="color: rgb(51, 51, 51);") {{prov}} ; 
+
+                        p.post-meta 
+                            a(ui-sref="byinstitution({ institution: call.institution})")
+                                {{call.institution}}
+                            span.pull-right(ng-show="call.expiration") Scade il {{call.expiration | date : 'dd MMM yyyy'}}
+                    hr(ng-repeat-end)
+
+
+        .featurette-divider
         h2 Institutions to Clean
         | &nbsp;
         .row.col-md-12.post-preview(ng-repeat="institution in unvalidated")

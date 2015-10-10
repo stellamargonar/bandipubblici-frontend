@@ -43,7 +43,6 @@ html(lang='en', ng-app="callsApp")
                     select.form-control(ng-model="queryObject.type")
                         option(value="") Seleziona Tipologia
                         option(ng-repeat="type in types" value="{{type}}") {{type}}
-                    
                 .featurette-divider
                     
                 div
@@ -52,6 +51,7 @@ html(lang='en', ng-app="callsApp")
                             call-type(type="call.type")
                         a(href="{{call.url}}")
                             h4.post-title {{call.title}}
+                        | {{call.text}}
                         .small(ng-show="call.provenance") Fonte 
                             a(href="call.provenance" style="color: rgb(51, 51, 51);") {{call.provenance}}
                         p.post-meta 
