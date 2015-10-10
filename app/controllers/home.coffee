@@ -35,7 +35,7 @@ router.get '/dataClean', (req, res, next) ->
         title: 'Bandi pubblici'
         tagline : 'Tutti i bandi pubblici italiani in un solo sito, gratis'
 
-router.get '/crawler', (req, res, next) ->
+router.get '/crawler*', (req, res, next) ->
   url = req.protocol + '://' + req.host + ':5000/' + (req.path.replace '/crawler' , '')
   console.log 'redirect to ' + url
   (request url ).pipe(res)
