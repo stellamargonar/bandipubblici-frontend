@@ -121,9 +121,9 @@ crawlApp.factory('Call', function ($resource) {
     );
 });
 
-crawlApp.factory('Source', ['$http', function($http){
+crawlApp.factory('Source', ['$http', '$location', function($http, $location){
     var instance = {};
-    var host = 'http://127.0.0.1:5000/';
+    var host = $location.protocol() + '://' + $location.host() + ':5000/';
 
     instance.save = function(payload){
         return $http.post(host + 'sources', payload);
@@ -204,11 +204,15 @@ crawlApp.controller('SourceController', ['$scope', 'Source', '$http', function($
             delete $scope.source.pattern[key]
     }
  }]);
-crawlApp.controller('DataCleanController', ['$scope', 'Source', '$http', function($scope, Source, $http){
+crawlApp.controller('DataCleanController', ['$scope', 'Source', 'Call', '$http', '$stateParams', function($scope, Source, Call, $http, $stateParams){
     var host = 'http://127.0.0.1:5000/';
 
     $scope.unvalidated = [];
     $scope.candidates = {};
+    $scope.selectMerge = {};
+
+    $scope.city = $stateParams.city;
+    $scope.calls = Call.query({city : $scope.city});
 
     var retrieveUnvalidatedInstitutions = function () {
         $scope.unvalidated = [];
@@ -239,7 +243,70 @@ crawlApp.controller('DataCleanController', ['$scope', 'Source', '$http', functio
         });
     };
 
+    $scope.selectAllBox = false;
+    $scope.selectAll = function() {
+        if ($scope.selectAllBox) {
+            $scope.selectMerge = {}
+            for (var c in $scope.calls) {
+                $scope.selectMerge[$scope.calls[c]._id] = true; 
+            }   
+        }
+        else {
+            $scope.selectMerge = {};
+        }
+    }
+
+    $scope.merge = function() {
+        console.log('Called merge');
+        var idsToMerge = [];
+        for (var k in $scope.selectMerge) {
+            if ($scope.selectMerge[k])
+                idsToMerge.push(k);           
+        }
+        $scope.selectMerge = {};
+    
+        console.log(idsToMerge);
+        if (idsToMerge.length <= 1)
+            return;
+
+        // idsToMerge.splice(1);
+        var base = idsToMerge[0];
+        var payload = {
+            baseCall : base,
+            calls : idsToMerge.splice(1)
+        };
+        console.log(payload);
+
+        $http.post(host + 'clean/mergeCall', payload)
+            .success(function(data) {
+                $scope.search();
+            });
+        
+    }
+
+    $scope.search = function(){
+        console.log($scope.queryObject);
+        $scope.calls = Call.query($scope.queryObject);
+        $scope.selectAllBox = false;
+    };
+    $scope.deleteCall = function(call){
+        call.$delete(function(){
+            $scope.calls = Call.query($scope.queryObject);
+        });
+    };
+    $scope.queryObject = {};
+    $scope.$watch('queryObject', $scope.search, true);
+
 
     retrieveUnvalidatedInstitutions();
+    $http.get('/api/institutions').success(function(data){
+        $scope.institutions = data;
+    });
+    $http.get('/api/cities').success(function(data){
+        $scope.cities = data;
+    });
+    $http.get('/api/types').success(function(data){
+        $scope.types = data;
+    });
 
 }]);

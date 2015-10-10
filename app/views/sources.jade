@@ -37,7 +37,7 @@ html(lang='en', ng-app="callsApp")
           h3 Registered Sources
           .clearfix
 
-          div(ng-repeat="source in sources")
+          div(ng-repeat="source in sources track by $index")
             .pull-right
               button.btn-xs.btn.btn-success(ng-click="crawlSource(source)")
                 i.fa.fa-play

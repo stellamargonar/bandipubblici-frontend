@@ -2,6 +2,7 @@ express  = require 'express'
 router = express.Router()
 mongoose = require 'mongoose'
 Call = mongoose.model 'Call'
+request = require 'request'
 
 module.exports = (app) ->
   app.use '/', router
@@ -33,3 +34,8 @@ router.get '/dataClean', (req, res, next) ->
     res.render 'dataClean',
         title: 'Bandi pubblici'
         tagline : 'Tutti i bandi pubblici italiani in un solo sito, gratis'
+
+router.get '/crawler', (req, res, next) ->
+  url = req.protocol + '://' + req.host + ':5000/' + (req.path.replace '/crawler' , '')
+  console.log 'redirect to ' + url
+  (request url ).pipe(res)
