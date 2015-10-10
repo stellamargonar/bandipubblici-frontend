@@ -121,9 +121,9 @@ crawlApp.factory('Call', function ($resource) {
     );
 });
 
-crawlApp.factory('Source', ['$http', '$location', function($http, $location){
+crawlApp.factory('Source', ['$http', function($http){
     var instance = {};
-    var host = $location.protocol() + '://' + $location.host() + ':5000/';
+    var host = '/crawler/';
 
     instance.save = function(payload){
         return $http.post(host + 'sources', payload);
@@ -205,7 +205,7 @@ crawlApp.controller('SourceController', ['$scope', 'Source', '$http', function($
     }
  }]);
 crawlApp.controller('DataCleanController', ['$scope', 'Source', 'Call', '$http', '$stateParams', function($scope, Source, Call, $http, $stateParams){
-    var host = 'http://127.0.0.1:5000/';
+    var host = '/crawler/';
 
     $scope.unvalidated = [];
     $scope.candidates = {};
