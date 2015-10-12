@@ -16,7 +16,7 @@ module.exports = (app) ->
 
 router.get '/call', (req, res, next) ->
   query = deleteEmpty req.query
-  #query.expirationDate = {$gt: new Date()}
+  query.expirationDate = {$gt: new Date()}
   console.log(query);
   Call.find(query).sort('expiration').limit(25).exec (err, calls) ->
     return next(err) if err
