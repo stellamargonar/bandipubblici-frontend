@@ -39,3 +39,8 @@ router.get '/crawler*', (req, res, next) ->
   url = req.protocol + '://' + req.host + ':5000' + (req.path.replace '/crawler' , '')
   console.log 'redirect to ' + url
   (request url ).pipe(res)
+
+router.post '/crawler*', (req, res, next) ->
+  url = req.protocol + '://' + req.host + ':5000' + (req.path.replace '/crawler' , '')
+  console.log 'redirect POST to ' + url
+  (request.post url , req.body ).pipe(res)
